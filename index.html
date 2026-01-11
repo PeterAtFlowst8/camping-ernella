@@ -511,14 +511,14 @@
                     class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-accent to-transparent opacity-50">
                 </div>
 
-                <form id="bookingForm" class="space-y-8 relative z-10">
+                <form id="bookingForm" class="space-y-8 relative z-10" onsubmit="event.preventDefault()">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Personal Info -->
                         <div class="space-y-2 group">
                             <label
                                 class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Full
                                 Name</label>
-                            <input type="text" required
+                            <input type="text" id="fullName" required
                                 class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark placeholder-stone-400 focus:outline-none focus:border-corsica-teal transition-colors"
                                 placeholder="e.g. Jean-Pierre Moulin">
                         </div>
@@ -526,7 +526,7 @@
                             <label
                                 class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Email
                                 Address</label>
-                            <input type="email" required
+                            <input type="email" id="email" required
                                 class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark placeholder-stone-400 focus:outline-none focus:border-corsica-teal transition-colors"
                                 placeholder="e.g. hello@example.com">
                         </div>
@@ -642,6 +642,52 @@
             </div>
         </div>
     </section>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-24 right-6 z-50 flex flex-col gap-4 pointer-events-none"></div>
+
+    <script>
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            // Style
+            toast.className = `
+                pointer-events-auto 
+                transform transition-all duration-500 ease-out translate-x-10 opacity-0
+                flex items-center gap-4 p-4 pr-12 rounded-sm shadow-2xl backdrop-blur-md
+                ${isError ? 'bg-red-900/90 text-white border-l-4 border-red-500' : 'bg-corsica-dark/90 text-gold-accent border-l-4 border-gold-accent'}
+            `;
+
+            toast.innerHTML = `
+                <div class="${isError ? 'text-red-200' : 'text-gold-accent'}">
+                    <i data-lucide="${isError ? 'alert-circle' : 'check-circle'}" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="font-serif text-lg leading-none mb-1">${isError ? 'Attention' : 'Success'}</h4>
+                    <p class="font-sans text-xs tracking-wide opacity-90">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 opacity-50 hover:opacity-100 transition-opacity">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Animate In
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-10', 'opacity-0');
+            });
+
+            // Auto Dismiss
+            setTimeout(() => {
+                toast.classList.add('translate-x-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 500);
+            }, 6000); // 6 seconds
+        }
+    </script>
+
 
     <footer class="bg-corsica-dark text-river-sand pt-24 pb-12 px-6 border-t border-white/5">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
@@ -1012,16 +1058,24 @@
         calculateTotal();
 
         async function handlePayment() {
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+
+            if (!fullName.value || !email.value) {
+                showToast("Please fill in your Full Name and Email Address.", true);
+                return;
+            }
+
             const total = calculateTotal();
             if (total <= 0) {
-                alert("Please select valid dates.");
+                showToast("Please select valid dates.", true);
                 return;
             }
 
             const button = document.querySelector('button[onclick="handlePayment()"]');
             const originalText = button.innerHTML;
             button.disabled = true;
-            button.innerHTML = 'Processing...';
+            button.innerHTML = '<span class="animate-pulse">Processing...</span>';
 
             const date1 = new Date(checkIn.value);
             const date2 = new Date(checkOut.value);
