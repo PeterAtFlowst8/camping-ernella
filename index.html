@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ernella | River & Silence</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Montserrat:wght@200;300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="Assets/Vendor/tailwindcss.js"></script>
+
+    <!-- Icons -->
+    <script src="Assets/Vendor/lucide.min.js"></script>
+
+    <!-- GSAP & Lenis -->
+    <script src="Assets/Vendor/gsap.min.js"></script>
+    <script src="Assets/Vendor/ScrollTrigger.min.js"></script>
+    <script src="Assets/Vendor/lenis.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'corsica-teal': '#1F3A3D', // Darker, richer
+                        'corsica-dark': '#0D181A', // Almost black
+                        'river-sand': '#F0EFEA', // Warmer off-white
+                        'stone-gray': '#8E918F',
+                        'sunset-clay': '#A65D57',
+                        'gold-accent': '#C5A065' // New luxury accent
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(13, 24, 26, 0.3), rgba(13, 24, 26, 0.5)), url('Assets/Images/_MG_8266.webp')",
+                    },
+                    letterSpacing: {
+                        'widest': '.25em',
+                        'mega': '.35em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Lenis Recommended CSS */
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
+        /* Luxury Utilities */
+        body {
+            overflow-x: hidden;
+            /* Hide scrollbar for cleaner look */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        ::selection {
+            background: #1F3A3D;
+            color: #F0EFEA;
+        }
+
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .char {
+            transform: translateY(115%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Form Focus Styles */
+        input:focus,
+        select:focus {
+            outline: none;
+            border-bottom-color: #1F3A3D;
+        }
+    </style>
+</head>
+
+<body class="bg-river-sand text-corsica-dark antialiased">
+
+    <nav id="navbar"
+        class="fixed w-full z-50 transition-all duration-300 py-8 px-8 md:px-16 flex justify-between items-center text-white mix-blend-difference">
+        <a href="#" class="text-3xl font-serif italic tracking-wider z-50 relative group">
+            Ernella
+            <span
+                class="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-500 group-hover:w-full"></span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex space-x-12 font-sans text-xs tracking-mega uppercase items-center">
+            <a href="#philosophy" class="hover:text-gold-accent transition-colors duration-300 relative group">
+                The Spirit
+                <span
+                    class="absolute -bottom-2 left-1/2 w-1 h-1 bg-gold-accent rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-1/2"></span>
+            </a>
+            <a href="#dwellings" class="hover:text-gold-accent transition-colors duration-300 relative group">
+                Stays
+                <span
+                    class="absolute -bottom-2 left-1/2 w-1 h-1 bg-gold-accent rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-1/2"></span>
+            </a>
+            <a href="#location" class="hover:text-gold-accent transition-colors duration-300 relative group">
+                Location
+                <span
+                    class="absolute -bottom-2 left-1/2 w-1 h-1 bg-gold-accent rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-1/2"></span>
+            </a>
+        </div>
+
+        <a href="#booking"
+            class="hidden md:block border border-white/30 hover:border-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-white hover:text-corsica-dark transition-all duration-500">
+            Book Stay
+        </a>
+
+        <!-- Mobile Menu Button (Placeholder) -->
+        <button class="md:hidden text-white">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </nav>
+
+    <header
+        class="relative h-screen min-h-[700px] w-full bg-hero-pattern bg-cover bg-center bg-no-repeat bg-fixed flex flex-col justify-center items-center text-center text-white px-4 overflow-hidden">
+
+        <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto space-y-8">
+            <div class="hero-text overflow-hidden">
+                <p
+                    class="text-xs md:text-sm font-sans tracking-mega uppercase opacity-0 animate-fade-in text-gold-accent mb-4">
+                    Giuncaggio, Corsica</p>
+            </div>
+
+            <h1
+                class="hero-text font-serif italic text-6xl md:text-8xl lg:text-9xl leading-none mix-blend-overlay opacity-90">
+                <span class="block">Silence</span>
+                <span class="block not-italic font-light mt-[-0.2em]">is Sacred</span>
+            </h1>
+
+            <div class="hero-text h-[1px] w-24 bg-white/50 mx-auto my-8"></div>
+
+            <p
+                class="hero-text text-lg md:text-xl font-light max-w-xl mx-auto opacity-80 font-sans tracking-wide leading-relaxed">
+                A historic farm on the banks of the Tavignano.<br>
+                Just you, the river, and the wind.
+            </p>
+        </div>
+
+        <div
+            class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-pointer">
+            <span class="text-[10px] uppercase tracking-widest">Discover</span>
+            <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
+        </div>
+    </header>
+
+    <section id="philosophy" class="relative py-32 px-6 md:px-12 max-w-screen-2xl mx-auto overflow-hidden">
+        <!-- Floating Elements -->
+        <div
+            class="absolute top-20 left-10 text-[10rem] font-serif text-slate-100/50 select-none z-0 pointer-events-none parallax-bg">
+            01</div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+
+            <!-- Text Content -->
+            <div class="lg:col-span-5 space-y-10 lg:pl-12">
+                <div class="flex items-center space-x-4 text-gold-accent opacity-0 reveal-text-trigger">
+                    <div class="w-12 h-[1px] bg-gold-accent"></div>
+                    <span class="uppercase tracking-mega text-xs font-semibold">The Philosophy</span>
+                </div>
+
+                <h2 class="text-5xl md:text-6xl font-serif text-corsica-dark leading-[1.1]">
+                    <span class="block overflow-hidden"><span class="block reveal-line">Preserved for</span></span>
+                    <span class="block overflow-hidden"><span
+                            class="block reveal-line italic text-stone-600">generations.</span></span>
+                </h2>
+
+                <div class="space-y-6 text-stone-gray font-light leading-relaxed text-lg">
+                    <p class="reveal-opacity">
+                        Presided over by its owner, now in his 80s, Ernella remains a testament to a simpler time. This
+                        is not a holiday park; it is a quiet sanctuary maintained with deep respect for the land.
+                    </p>
+                    <p class="reveal-opacity">
+                        We invite those seeking true peace—away from the noise of digital notifications and modern
+                        rush—to pitch a tent by the water. There is no Wi-Fi here, and the cell service is faint,
+                        leaving you free to listen to the Tavignano river.
+                    </p>
+                </div>
+
+                <div class="pt-4 reveal-opacity">
+                    <a href="#booking"
+                        class="inline-flex items-center space-x-2 text-corsica-teal uppercase tracking-widest text-xs font-bold hover:space-x-4 transition-all duration-300 group">
+                        <span>Experience Silence</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:text-gold-accent transition-colors"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Image Content -->
+            <div class="lg:col-span-7 relative">
+                <div class="overflow-hidden h-full shadow-2xl relative">
+                    <div class="absolute inset-0 bg-corsica-dark/10 z-10"></div>
+                    <img src="Assets/Images/_MG_8275.webp" class="w-full h-full object-cover parallax-img">
+                </div>
+
+                <!-- Offset Image -->
+                <div
+                    class="absolute -bottom-10 -left-10 w-64 h-80 overflow-hidden hidden md:block shadow-2xl border-4 border-river-sand parallax-img-small">
+                    <img src="Assets/Images/_MG_8198.webp" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-corsica-dark text-river-sand py-24 relative overflow-hidden" id="experience">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5"
+            style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20 space-y-4">
+                <span class="text-xs font-bold tracking-mega uppercase text-gold-accent">The Essentials</span>
+                <h2 class="text-4xl md:text-5xl font-serif">A sanctuary for the senses</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                <!-- Card 1 -->
+                <div
+                    class="group p-8 border border-white/10 hover:border-gold-accent/50 transition-all duration-500 bg-white/5 backdrop-blur-sm reveal-card hover:-translate-y-2">
+                    <div
+                        class="mb-6 opacity-60 group-hover:opacity-100 group-hover:text-gold-accent transition-all duration-300">
+                        <i data-lucide="waves" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4 group-hover:text-white transition-colors">Tavignano River</h3>
+                    <p class="text-sm text-stone-300 font-light leading-relaxed">
+                        Direct private access to the emerald waters. Swim in the cool currents or meditate by the banks
+                        in complete seclusion.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="group p-8 border border-white/10 hover:border-gold-accent/50 transition-all duration-500 bg-white/5 backdrop-blur-sm reveal-card delay-100 hover:-translate-y-2">
+                    <div
+                        class="mb-6 opacity-60 group-hover:opacity-100 group-hover:text-gold-accent transition-all duration-300">
+                        <i data-lucide="wifi-off" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4 group-hover:text-white transition-colors">Digital Detox</h3>
+                    <p class="text-sm text-stone-300 font-light leading-relaxed">
+                        No Wi-Fi. No notifications. A rare opportunity to disconnect from the grid and reconnect with
+                        the present moment.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="group p-8 border border-white/10 hover:border-gold-accent/50 transition-all duration-500 bg-white/5 backdrop-blur-sm reveal-card delay-200 hover:-translate-y-2">
+                    <div
+                        class="mb-6 opacity-60 group-hover:opacity-100 group-hover:text-gold-accent transition-all duration-300">
+                        <i data-lucide="sun" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4 group-hover:text-white transition-colors">Absolute Quiet</h3>
+                    <p class="text-sm text-stone-300 font-light leading-relaxed">
+                        A strict noise policy ensures the soundtrack of your stay is nothing but wind, water, and
+                        birdsong.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dwellings" class="py-32 bg-river-sand">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold tracking-mega uppercase text-gold-accent block">The
+                        Accommodations</span>
+                    <h2 class="text-4xl md:text-5xl font-serif text-corsica-dark">Simple Living</h2>
+                </div>
+                <p class="text-stone-gray font-light max-w-md text-right hidden md:block">
+                    Choose between our pre-pitched tents, mobile homes, or your own patch of earth.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Static Homes -->
+                <div class="group relative h-[600px] overflow-hidden cursor-pointer">
+                    <div
+                        class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500 z-10">
+                    </div>
+                    <img src="Assets/Images/Static Caravan 1.jpg"
+                        class="w-full h-full object-cover transition-transform duration-1000 transform group-hover:scale-110"
+                        alt="Static Home">
+
+                    <div
+                        class="absolute bottom-0 left-0 w-full p-8 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <span class="text-xs text-white/80 uppercase tracking-widest mb-2 block">Premium</span>
+                        <h3 class="font-serif text-3xl text-white mb-4">The 2 Static Homes</h3>
+                        <div
+                            class="bg-white/10 backdrop-blur-md border border-white/20 p-6 hidden group-hover:block transition-all duration-300 animate-fade-in-up">
+                            <p class="text-sm text-white/90 mb-4 font-light leading-relaxed">Privacy and comfort with
+                                fully equipped kitchens and private terraces.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs uppercase tracking-wider text-white">Limited Availability</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- River Pitches -->
+                <div class="group relative h-[600px] overflow-hidden cursor-pointer lg:translate-y-16">
+                    <div
+                        class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500 z-10">
+                    </div>
+                    <img src="Assets/Images/camping%20river%20.webp"
+                        class="w-full h-full object-cover transition-transform duration-1000 transform group-hover:scale-110"
+                        alt="River Pitch">
+
+                    <div
+                        class="absolute bottom-0 left-0 w-full p-8 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <span class="text-xs text-white/80 uppercase tracking-widest mb-2 block">Nature</span>
+                        <h3 class="font-serif text-3xl text-white mb-4">River Pitches</h3>
+                        <div
+                            class="bg-white/10 backdrop-blur-md border border-white/20 p-6 hidden group-hover:block transition-all duration-300 animate-fade-in-up">
+                            <p class="text-sm text-white/90 mb-4 font-light leading-relaxed">Set up your tent on the
+                                grassy banks, just meters from the water's edge.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs uppercase tracking-wider text-white">From €25/night</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farm Pitches -->
+                <div class="group relative h-[600px] overflow-hidden cursor-pointer">
+                    <div
+                        class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500 z-10">
+                    </div>
+                    <img src="Assets/Images/_MG_8360.webp"
+                        class="w-full h-full object-cover transition-transform duration-1000 transform group-hover:scale-110"
+                        alt="Farm Pitch">
+
+                    <div
+                        class="absolute bottom-0 left-0 w-full p-8 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <span class="text-xs text-white/80 uppercase tracking-widest mb-2 block">Classic</span>
+                        <h3 class="font-serif text-3xl text-white mb-4">Shaded Groves</h3>
+                        <div
+                            class="bg-white/10 backdrop-blur-md border border-white/20 p-6 hidden group-hover:block transition-all duration-300 animate-fade-in-up">
+                            <p class="text-sm text-white/90 mb-4 font-light leading-relaxed">Quiet spots nestled under
+                                the old farm trees, perfect for escaping the summer sun.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs uppercase tracking-wider text-white">From €25/night</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="h-[60vh] bg-fixed bg-cover bg-left md:bg-center flex items-center justify-center relative"
+        style="background-image: url('Assets/Images/camping%20with%20van.webp');">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative z-10 text-center text-white px-4">
+            <h2 class="font-serif italic text-4xl md:text-6xl mb-6 reveal-opacity">"Quiet is peace. <br>Tranquility is
+                quiet."</h2>
+            <p class="font-sans text-xs tracking-mega uppercase opacity-80 reveal-opacity">The Law of the River</p>
+        </div>
+    </section>
+
+    <section id="location" class="py-32 bg-river-sand relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-20 items-center relative z-10">
+            <div class="space-y-10 order-2 md:order-1">
+                <div class="relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-corsica-teal/10 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <img src="Assets/Images/_MG_8356.webp" alt="Tavignano River"
+                        class="w-full h-[600px] object-cover rounded-sm shadow-2xl transition-transform duration-1000 group-hover:scale-105 parallax-img-small">
+                </div>
+            </div>
+
+            <div class="order-1 md:order-2 space-y-8 pl-0 md:pl-10">
+                <div class="flex items-center space-x-4 text-gold-accent opacity-0 reveal-text-trigger">
+                    <div class="w-12 h-[1px] bg-gold-accent"></div>
+                    <span class="uppercase tracking-mega text-xs font-semibold">The Location</span>
+                </div>
+
+                <h2 class="text-5xl font-serif text-corsica-dark leading-tight">
+                    <span class="block reveal-line">Hidden in the</span>
+                    <span class="block reveal-line italic text-stone-600">valley.</span>
+                </h2>
+
+                <p class="text-stone-gray font-light leading-relaxed text-lg reveal-opacity">
+                    Located on the Route d'Ernella in Giuncaggio, our campsite is a refuge from the world. A
+                    single-track road leads you away from the coastline into the deep heart of the Tavignano valley.
+                </p>
+
+                <ul class="space-y-6 pt-6 border-t border-corsica-dark/10 reveal-opacity">
+                    <li class="flex items-start space-x-4 text-corsica-dark group cursor-pointer">
+                        <div
+                            class="p-2 border border-stone-300 rounded-full group-hover:border-gold-accent transition-colors">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gold-accent"></i>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-lg">Route d'Ernella</span>
+                            <span class="text-sm text-stone-gray font-light">20251 Giuncaggio, France</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-4 text-corsica-dark group cursor-pointer">
+                        <div
+                            class="p-2 border border-stone-300 rounded-full group-hover:border-gold-accent transition-colors">
+                            <i data-lucide="navigation" class="w-5 h-5 text-gold-accent"></i>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-lg">GPS Coordinates</span>
+                            <span class="text-sm text-stone-gray font-light">42.1234° N, 9.5678° E</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="py-32 bg-white relative">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16 space-y-4 reveal-opacity">
+                <span class="text-gold-accent uppercase tracking-mega text-xs font-bold">Reservations</span>
+                <h2 class="text-5xl md:text-6xl font-serif text-corsica-dark">Secure your silence</h2>
+                <p class="text-stone-gray mt-4 max-w-lg mx-auto font-light">
+                    For static homes, please use <a href="#"
+                        class="text-corsica-teal underline hover:text-gold-accent transition-colors">Booking.com</a>.
+                    <br>
+                    For pitches, please complete the request below.
+                </p>
+            </div>
+
+            <div class="bg-river-sand p-8 md:p-14 shadow-2xl reveal-opacity relative overflow-hidden">
+                <div
+                    class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-accent to-transparent opacity-50">
+                </div>
+
+                <form id="bookingForm" class="space-y-8 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Personal Info -->
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Full
+                                Name</label>
+                            <input type="text" required
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark placeholder-stone-400 focus:outline-none focus:border-corsica-teal transition-colors"
+                                placeholder="e.g. Jean-Pierre Moulin">
+                        </div>
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Email
+                                Address</label>
+                            <input type="email" required
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark placeholder-stone-400 focus:outline-none focus:border-corsica-teal transition-colors"
+                                placeholder="e.g. hello@example.com">
+                        </div>
+
+                        <!-- Dates -->
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Check
+                                In</label>
+                            <input type="date" id="checkIn" required
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                        </div>
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Check
+                                Out</label>
+                            <input type="date" id="checkOut" required
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                        </div>
+
+                        <!-- Details -->
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Adults
+                                (€9.00)</label>
+                            <select id="adults"
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                                <option value="1">1 Adult</option>
+                                <option value="2" selected>2 Adults</option>
+                                <option value="3">3 Adults</option>
+                                <option value="4">4 Adults</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Children
+                                (€5.00)</label>
+                            <select id="children"
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                                <option value="0">No Children</option>
+                                <option value="1">1 Child</option>
+                                <option value="2">2 Children</option>
+                                <option value="3">3 Children</option>
+                            </select>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="md:col-span-2 pt-4">
+                            <label
+                                class="flex items-center justify-between p-4 border border-stone-200 cursor-pointer hover:border-gold-accent hover:bg-white/50 transition-all duration-300 group">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" id="electricity"
+                                            class="peer h-5 w-5 cursor-pointer appearance-none rounded-sm border border-stone-400 checked:bg-corsica-teal checked:border-transparent transition-all">
+                                        <i data-lucide="check"
+                                            class="absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-white w-4 h-4 left-0.5 top-0.5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block font-serif text-lg text-corsica-dark">Electricity
+                                            Connection</span>
+                                        <span class="block text-xs text-stone-500 font-sans tracking-wide">6A Power
+                                            Hookup for your pitch</span>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-bold text-corsica-teal font-serif">€4.50 / night</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Total & Submit -->
+                    <div
+                        class="border-t border-stone-300 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+                        <div class="text-center md:text-left">
+                            <div class="text-xs uppercase tracking-widest text-stone-500 mb-1">Estimated Total</div>
+                            <div class="text-4xl font-serif text-corsica-dark" id="totalPrice">€0.00</div>
+                            <div class="text-xs text-stone-400 mt-2 font-light" id="nightCount">Select dates</div>
+                        </div>
+                        <button type="button" onclick="handlePayment()"
+                            class="bg-corsica-teal text-white px-10 py-4 uppercase tracking-widest text-xs font-bold hover:bg-corsica-dark transition-all duration-300 flex items-center shadow-lg hover:shadow-xl hover:-translate-y-1 group">
+                            <span>Proceed to Payment</span>
+                            <i data-lucide="arrow-right"
+                                class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-corsica-dark text-river-sand pt-24 pb-12 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-1 space-y-6">
+                <a href="#" class="text-3xl font-serif italic block">Ernella</a>
+                <p class="text-sm text-stone-400 leading-relaxed font-light max-w-xs">
+                    A peaceful retreat in the heart of Corsica. Where silence is not empty, but full of answers.
+                </p>
+            </div>
+            <div>
+                <h4 class="uppercase tracking-mega text-xs font-bold mb-8 text-gold-accent">Explore</h4>
+                <ul class="space-y-4 text-sm text-stone-400 font-light">
+                    <li><a href="#philosophy" class="hover:text-white transition-colors duration-300">Our Philosophy</a>
+                    </li>
+                    <li><a href="#dwellings" class="hover:text-white transition-colors duration-300">Accommodations</a>
+                    </li>
+                    <li><a href="#location" class="hover:text-white transition-colors duration-300">The Valley</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="uppercase tracking-mega text-xs font-bold mb-8 text-gold-accent">Contact</h4>
+                <ul class="space-y-4 text-sm text-stone-400 font-light">
+                    <li>Route d'Ernella</li>
+                    <li>20251 Giuncaggio, France</li>
+                    <li class="pt-2 text-white font-serif">+33 (0)4 95 48 82 06</li>
+                    <li>contact@ernella.com</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="uppercase tracking-mega text-xs font-bold mb-8 text-gold-accent">Newsletter</h4>
+                <p class="text-xs text-stone-400 mb-6 font-light">Occasional updates on availability and seasons.</p>
+                <div class="flex border-b border-white/20 pb-2 group focus-within:border-white transition-colors">
+                    <input type="email" placeholder="Email Address"
+                        class="bg-transparent w-full outline-none text-sm placeholder-stone-600 text-white font-light">
+                    <button
+                        class="text-xs uppercase tracking-widest hover:text-gold-accent transition-colors">Join</button>
+                </div>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] text-stone-600 uppercase tracking-widest border-t border-white/5 pt-8">
+            <div>&copy; 2024 Camping Ernella. All rights reserved.</div>
+            <div class="flex space-x-8 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">Instagram</a>
+                <a href="#" class="hover:text-white transition-colors">Facebook</a>
+                <a href="#" class="hover:text-white transition-colors">Legal</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        // Initialize GSAP & Lenis
+        gsap.registerPlugin(ScrollTrigger);
+
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        // General GSAP Animations
+        const initAnimations = () => {
+            // Hero Text Reveal
+            const heroText = document.querySelectorAll('.hero-text');
+            gsap.from(heroText, {
+                y: 100,
+                opacity: 0,
+                duration: 1.5,
+                stagger: 0.2,
+                ease: "power4.out",
+                delay: 0.5
+            });
+
+            // Parallax Hero
+            gsap.to("header", {
+                backgroundPosition: "50% 100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "header",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Section Reveals (General)
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                gsap.fromTo(el,
+                    { y: 50, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1.2,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                        }
+                    }
+                );
+            });
+
+            // Philosophy Section Animations
+            // Text Lines Reveal
+            const revealLines = document.querySelectorAll('.reveal-line');
+            revealLines.forEach(line => {
+                gsap.from(line, {
+                    y: "100%",
+                    duration: 1,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top 85%",
+                    }
+                });
+            });
+
+            // Opacity Fade Ins
+            const revealOpacity = document.querySelectorAll('.reveal-opacity');
+            gsap.from(revealOpacity, {
+                y: 20,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: "#philosophy",
+                    start: "top 60%"
+                }
+            });
+
+            // Parallax Images
+            gsap.to(".parallax-img", {
+                y: "20%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#philosophy",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            gsap.to(".parallax-bg", {
+                y: -100,
+                scrollTrigger: {
+                    trigger: "#philosophy",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Card Stagger Reveal
+            const cards = document.querySelectorAll('.reveal-card');
+            if (cards.length > 0) {
+                gsap.fromTo(cards,
+                    { y: 50, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        stagger: 0.2,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: "#experience",
+                            start: "top 95%", // Relaxed trigger
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            }
+
+            // Small Parallax Images (Offset)
+            gsap.utils.toArray(".parallax-img-small").forEach(img => {
+                gsap.to(img, {
+                    y: -50,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: img,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1.5
+                    }
+                });
+            });
+
+            // Footer Stagger
+            gsap.from("footer div", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: "footer",
+                    start: "top 90%"
+                }
+            });
+        };
+
+        // Initialize
+        initAnimations();
+
+        // Navbar Transition with GSAP
+        const navbar = document.getElementById('navbar');
+        ScrollTrigger.create({
+            start: "top -50",
+            onUpdate: (self) => {
+                if (self.direction === 1) { // Scrolling down
+                    gsap.to(navbar, { y: -100, duration: 0.3, ease: "power2.out" });
+                } else { // Scrolling up
+                    gsap.to(navbar, { y: 0, duration: 0.3, ease: "power2.out" });
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('bg-corsica-dark/90', 'backdrop-blur-md', 'shadow-lg');
+                        navbar.classList.remove('py-6');
+                        navbar.classList.add('py-4');
+                    } else {
+                        navbar.classList.remove('bg-corsica-dark/90', 'backdrop-blur-md', 'shadow-lg');
+                        navbar.classList.add('py-6');
+                        navbar.classList.remove('py-4');
+                    }
+                }
+            }
+        });
+
+        // Booking Calculation Logic
+        const form = document.getElementById('bookingForm');
+        const checkIn = document.getElementById('checkIn');
+        const checkOut = document.getElementById('checkOut');
+        const adults = document.getElementById('adults');
+        const children = document.getElementById('children');
+        const electricity = document.getElementById('electricity');
+        const totalDisplay = document.getElementById('totalPrice');
+        const nightDisplay = document.getElementById('nightCount');
+
+        // Official Tariffs (Approximate based on ernella.fr structure)
+        const PRICES = {
+            adult: 9.00,
+            child: 5.00,
+            electricity: 4.50,
+            pitch: 3.50,
+            tax: 0.22 // Taxe de séjour per adult
+        };
+
+        function calculateTotal() {
+            const date1 = new Date(checkIn.value);
+            const date2 = new Date(checkOut.value);
+
+            if (date1 && date2 && date2 > date1) {
+                const diffTime = Math.abs(date2 - date1);
+                const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                // Fixed Pitch Price (Emplacement)
+                const pitchPrice = PRICES.pitch;
+
+                const numAdults = parseInt(adults.value);
+                const numChildren = parseInt(children.value);
+
+                const dailyAdultCost = numAdults * (PRICES.adult + PRICES.tax);
+                const dailyChildCost = numChildren * PRICES.child;
+                const dailyElecCost = electricity.checked ? PRICES.electricity : 0;
+
+                const nightlyTotal = pitchPrice + dailyAdultCost + dailyChildCost + dailyElecCost;
+                const grandTotal = nightlyTotal * nights;
+
+                totalDisplay.innerText = '€' + grandTotal.toFixed(2);
+                nightDisplay.innerText = `${nights} night${nights > 1 ? 's' : ''} @ €${nightlyTotal.toFixed(2)}/night`;
+                return grandTotal;
+            } else {
+                totalDisplay.innerText = '€0.00';
+                nightDisplay.innerText = 'Select valid dates';
+                return 0;
+            }
+        }
+
+        // Attach listeners
+        [checkIn, checkOut, adults, children, electricity].forEach(el => {
+            el.addEventListener('change', calculateTotal);
+            el.addEventListener('input', calculateTotal);
+        });
+
+        // Set default dates (Tomorrow -> Day after)
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dayAfter = new Date(tomorrow);
+        dayAfter.setDate(dayAfter.getDate() + 1); s
+
+        // Helper to format date as YYYY-MM-DD using local time
+        function getLocalISODate(date) {
+            const offset = date.getTimezoneOffset();
+            const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+            return localDate.toISOString().split('T')[0];
+        }
+
+        // Set min date to today
+        checkIn.min = getLocalISODate(today);
+
+        // Set initial values
+        checkIn.valueAsDate = tomorrow;
+        checkOut.valueAsDate = dayAfter;
+        checkOut.min = getLocalISODate(tomorrow);
+
+        // Update constraints when check-in changes
+        checkIn.addEventListener('change', function () {
+            if (this.value) {
+                // Set min checkout to checkin date
+                checkOut.min = this.value;
+
+                const inDate = new Date(this.value);
+                const outDate = new Date(checkOut.value);
+
+                // If checkout is same as or before checkin, bump it to next day
+                if (!checkOut.value || outDate <= inDate) {
+                    const nextDay = new Date(inDate);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    checkOut.valueAsDate = nextDay;
+                }
+            }
+        });
+
+        calculateTotal();
+
+        function handlePayment() {
+            const total = calculateTotal();
+            if (total > 0) {
+                alert(`Redirecting to Stripe Checkout for payment of €${total.toFixed(2)}...\n\n(This is a demo action)`);
+            } else {
+                alert("Please select valid check-in and check-out dates.");
+            }
+        }
+    </script>
+</body>
+
+</html>
