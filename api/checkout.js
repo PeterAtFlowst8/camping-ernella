@@ -1,6 +1,10 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = async (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY) {
+        return res.status(500).json({ error: 'Configuration Error: STRIPE_SECRET_KEY is missing in Vercel settings.' });
+    }
+
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).json({ error: 'Method Not Allowed' });
