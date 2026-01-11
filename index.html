@@ -142,6 +142,22 @@
         .animate-fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
         }
+
+        /* Mobile Menu Styles */
+        #mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-link {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #mobile-menu.active .mobile-link {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -179,11 +195,32 @@
             Book Stay
         </a>
 
-        <!-- Mobile Menu Button (Placeholder) -->
-        <button class="md:hidden text-white">
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden text-white z-[60] relative">
             <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-corsica-dark z-[100] translate-x-full transition-transform duration-500 ease-in-out flex flex-col items-center justify-center">
+        <button id="mobile-menu-close"
+            class="absolute top-8 right-8 text-white hover:text-gold-accent transition-colors">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <nav class="flex flex-col items-center space-y-10 text-center">
+            <a href="#philosophy" class="text-white text-4xl font-serif italic mobile-link"
+                style="transition-delay: 0.1s;">The Spirit</a>
+            <a href="#dwellings" class="text-white text-4xl font-serif italic mobile-link"
+                style="transition-delay: 0.2s;">Stays</a>
+            <a href="#location" class="text-white text-4xl font-serif italic mobile-link"
+                style="transition-delay: 0.3s;">Location</a>
+            <a href="#booking"
+                class="bg-gold-accent text-corsica-dark px-10 py-4 uppercase tracking-widest text-xs font-bold mobile-link"
+                style="transition-delay: 0.4s;">Book
+                Stay</a>
+        </nav>
+    </div>
 
     <header
         class="relative h-screen min-h-[700px] w-full bg-hero-pattern bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center text-center text-white px-4 overflow-hidden md:bg-fixed">
@@ -238,7 +275,7 @@
                 <h2 class="text-5xl md:text-6xl font-serif text-corsica-dark leading-[1.1]">
                     <span class="block overflow-hidden pb-2 pt-2 px-2"><span class="block reveal-line">Preserved
                             for</span></span>
-                    <span class="block overflow-hidden pb-4 pt-2 px-4 -ml-4"><span
+                    <span class="block overflow-hidden pb-4 pt-2 px-2"><span
                             class="block reveal-line italic text-stone-600">generations.</span></span>
                 </h2>
 
@@ -1186,6 +1223,31 @@
                 button.innerHTML = originalText;
             }
         }
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu(show) {
+            if (show) {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scroll
+            } else {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scroll
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', () => toggleMenu(true));
+        mobileMenuClose.addEventListener('click', () => toggleMenu(false));
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
+        });
     </script>
 </body>
 
