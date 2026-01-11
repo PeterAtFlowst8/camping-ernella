@@ -549,7 +549,7 @@
                         <div class="space-y-2 group">
                             <label
                                 class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Adults
-                                (€9.00)</label>
+                                (€7.00/day)</label>
                             <select id="adults"
                                 class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
                                 <option value="1">1 Adult</option>
@@ -561,13 +561,40 @@
                         <div class="space-y-2 group">
                             <label
                                 class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Children
-                                (€5.00)</label>
+                                (€3.50/day)</label>
                             <select id="children"
                                 class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
                                 <option value="0">No Children</option>
                                 <option value="1">1 Child</option>
                                 <option value="2">2 Children</option>
                                 <option value="3">3 Children</option>
+                            </select>
+                        </div>
+
+                        <!-- Accommodation Type -->
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Tent
+                                Size</label>
+                            <select id="tentSize"
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                                <option value="0">No Tent</option>
+                                <option value="3">2-Person Tent (€3.00)</option>
+                                <option value="5" selected>4-Person Tent (€5.00)</option>
+                                <option value="7">6-Person Tent (€7.00)</option>
+                            </select>
+                        </div>
+
+                        <!-- Vehicle -->
+                        <div class="space-y-2 group">
+                            <label
+                                class="text-xs uppercase tracking-widest text-stone-500 font-bold group-focus-within:text-corsica-teal transition-colors">Vehicle</label>
+                            <select id="vehicle"
+                                class="w-full bg-transparent border-b border-stone-300 py-3 text-corsica-dark focus:outline-none focus:border-corsica-teal transition-colors font-serif">
+                                <option value="3" selected>Car / Motorcycle (€3.00)</option>
+                                <option value="8">Van (€8.00)</option>
+                                <option value="10">Camper / Motorhome (€10.00)</option>
+                                <option value="0">No Vehicle</option>
                             </select>
                         </div>
 
@@ -589,7 +616,7 @@
                                             Hookup for your pitch</span>
                                     </div>
                                 </div>
-                                <span class="text-sm font-bold text-corsica-teal font-serif">€4.50 / night</span>
+                                <span class="text-sm font-bold text-corsica-teal font-serif">€5.00 / night</span>
                             </label>
                         </div>
                     </div>
@@ -875,16 +902,18 @@
         const adults = document.getElementById('adults');
         const children = document.getElementById('children');
         const electricity = document.getElementById('electricity');
+        const tentSize = document.getElementById('tentSize');
+        const vehicle = document.getElementById('vehicle');
         const totalDisplay = document.getElementById('totalPrice');
         const nightDisplay = document.getElementById('nightCount');
 
-        // Official Tariffs (Approximate based on ernella.fr structure)
+        // Official Tariffs 2025 (ernella.fr)
         const PRICES = {
-            adult: 9.00,
-            child: 5.00,
-            electricity: 4.50,
-            pitch: 3.50,
-            tax: 0.22 // Taxe de séjour per adult
+            adult: 7.00,
+            child: 3.50,
+            electricity: 5.00,
+            pitchBase: 2.00, // Base emplacement fee
+            tax: 0.22 // Taxe de séjour
         };
 
         function calculateTotal() {
@@ -895,21 +924,33 @@
                 const diffTime = Math.abs(date2 - date1);
                 const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                // Fixed Pitch Price (Emplacement)
-                const pitchPrice = PRICES.pitch;
+                // 1. Base Pitch Fee
+                const pitchFee = PRICES.pitchBase;
 
+                // 2. People
                 const numAdults = parseInt(adults.value);
                 const numChildren = parseInt(children.value);
+                const peopleCost = (numAdults * (PRICES.adult)) + (numChildren * PRICES.child);
 
-                const dailyAdultCost = numAdults * (PRICES.adult + PRICES.tax);
-                const dailyChildCost = numChildren * PRICES.child;
-                const dailyElecCost = electricity.checked ? PRICES.electricity : 0;
+                // 3. Accommodation (Tent)
+                const tentCost = parseInt(tentSize.value) || 0;
 
-                const nightlyTotal = pitchPrice + dailyAdultCost + dailyChildCost + dailyElecCost;
-                const grandTotal = nightlyTotal * nights;
+                // 4. Vehicle
+                const vehicleCost = parseInt(vehicle.value) || 0;
+
+                // 5. Electricity
+                const elecCost = electricity.checked ? PRICES.electricity : 0;
+
+                // Daily Total
+                const dailyTotal = pitchFee + peopleCost + tentCost + vehicleCost + elecCost;
+
+                // Grand Total
+                const grandTotal = dailyTotal * nights;
 
                 totalDisplay.innerText = '€' + grandTotal.toFixed(2);
-                nightDisplay.innerText = `${nights} night${nights > 1 ? 's' : ''} @ €${nightlyTotal.toFixed(2)}/night`;
+                nightDisplay.innerText = `${nights} night${nights > 1 ? 's' : ''} @ €${dailyTotal.toFixed(2)}/night`;
+
+                // Store data for potential submission
                 return grandTotal;
             } else {
                 totalDisplay.innerText = '€0.00';
@@ -919,17 +960,15 @@
         }
 
         // Attach listeners
-        [checkIn, checkOut, adults, children, electricity].forEach(el => {
-            el.addEventListener('change', calculateTotal);
-            el.addEventListener('input', calculateTotal);
+        [checkIn, checkOut, adults, children, electricity, tentSize, vehicle].forEach(el => {
+            if (el) {
+                el.addEventListener('change', calculateTotal);
+                el.addEventListener('input', calculateTotal);
+            }
         });
 
-        // Set default dates (Tomorrow -> Day after)
+        // Set default dates & validation
         const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dayAfter = new Date(tomorrow);
-        dayAfter.setDate(dayAfter.getDate() + 1); s
 
         // Helper to format date as YYYY-MM-DD using local time
         function getLocalISODate(date) {
@@ -938,10 +977,15 @@
             return localDate.toISOString().split('T')[0];
         }
 
-        // Set min date to today
+        // Block past dates
         checkIn.min = getLocalISODate(today);
 
-        // Set initial values
+        // Set default: Tomorrow -> Day After
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dayAfter = new Date(tomorrow);
+        dayAfter.setDate(dayAfter.getDate() + 1);
+
         checkIn.valueAsDate = tomorrow;
         checkOut.valueAsDate = dayAfter;
         checkOut.min = getLocalISODate(tomorrow);
@@ -949,29 +993,28 @@
         // Update constraints when check-in changes
         checkIn.addEventListener('change', function () {
             if (this.value) {
-                // Set min checkout to checkin date
                 checkOut.min = this.value;
-
                 const inDate = new Date(this.value);
                 const outDate = new Date(checkOut.value);
 
-                // If checkout is same as or before checkin, bump it to next day
                 if (!checkOut.value || outDate <= inDate) {
                     const nextDay = new Date(inDate);
                     nextDay.setDate(nextDay.getDate() + 1);
                     checkOut.valueAsDate = nextDay;
                 }
+                calculateTotal();
             }
         });
 
+        // Initial calculation
         calculateTotal();
 
         function handlePayment() {
             const total = calculateTotal();
             if (total > 0) {
-                alert(`Redirecting to Stripe Checkout for payment of €${total.toFixed(2)}...\n\n(This is a demo action)`);
+                alert(`Proceeding to payment for €${total.toFixed(2)}.\n(Payment gateway integration required)`);
             } else {
-                alert("Please select valid check-in and check-out dates.");
+                alert("Please select valid dates.");
             }
         }
     </script>
