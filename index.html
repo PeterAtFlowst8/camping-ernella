@@ -1009,12 +1009,124 @@
         // Initial calculation
         calculateTotal();
 
-        function handlePayment() {
+        async function handlePayment() {
             const total = calculateTotal();
-            if (total > 0) {
-                alert(`Proceeding to payment for €${total.toFixed(2)}.\n(Payment gateway integration required)`);
-            } else {
+            if (total <= 0) {
                 alert("Please select valid dates.");
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="handlePayment()"]');
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = 'Processing...';
+
+            const date1 = new Date(checkIn.value);
+            const date2 = new Date(checkOut.value);
+            const diffTime = Math.abs(date2 - date1);
+            const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            const numAdults = parseInt(adults.value);
+            const numChildren = parseInt(children.value);
+            const tentCost = parseInt(tentSize.value) || 0;
+            const vehicleCost = parseInt(vehicle.value) || 0;
+            const isElec = electricity.checked;
+
+            // Construct Line Items for Stripe
+            const items = [];
+
+            // 1. Pitch Base Fee (Per night)
+            items.push({
+                price_data: {
+                    currency: 'eur',
+                    product_data: { name: 'Pitch Fee (Emplacement)' },
+                    unit_amount: Math.round(PRICES.pitchBase * 100),
+                },
+                quantity: nights,
+            });
+
+            // 2. Adults (Per person per night)
+            if (numAdults > 0) {
+                items.push({
+                    price_data: {
+                        currency: 'eur',
+                        product_data: { name: 'Adult Guest' },
+                        unit_amount: Math.round((PRICES.adult + PRICES.tax) * 100),
+                    },
+                    quantity: numAdults * nights,
+                });
+            }
+
+            // 3. Children (Per person per night)
+            if (numChildren > 0) {
+                items.push({
+                    price_data: {
+                        currency: 'eur',
+                        product_data: { name: 'Child Guest' },
+                        unit_amount: Math.round(PRICES.child * 100),
+                    },
+                    quantity: numChildren * nights,
+                });
+            }
+
+            // 4. Tent (Per night)
+            if (tentCost > 0) {
+                items.push({
+                    price_data: {
+                        currency: 'eur',
+                        product_data: { name: 'Tent Surcharge' },
+                        unit_amount: Math.round(tentCost * 100),
+                    },
+                    quantity: nights,
+                });
+            }
+
+            // 5. Vehicle (Per night)
+            if (vehicleCost > 0) {
+                items.push({
+                    price_data: {
+                        currency: 'eur',
+                        product_data: { name: 'Vehicle Surcharge' },
+                        unit_amount: Math.round(vehicleCost * 100),
+                    },
+                    quantity: nights,
+                });
+            }
+
+            // 6. Electricity (Per night)
+            if (isElec) {
+                items.push({
+                    price_data: {
+                        currency: 'eur',
+                        product_data: { name: 'Electricity Connection' },
+                        unit_amount: Math.round(PRICES.electricity * 100),
+                    },
+                    quantity: nights,
+                });
+            }
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ items }),
+                });
+
+                const session = await response.json();
+
+                if (session.error) {
+                    alert(session.error);
+                } else {
+                    window.location.href = session.url;
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred. Please try again.');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalText;
             }
         }
     </script>

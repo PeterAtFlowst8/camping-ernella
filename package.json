@@ -1,0 +1,11 @@
+{
+  "name": "camping-ernella",
+  "version": "1.0.0",
+  "description": "Camping Ernella Website",
+  "scripts": {
+    "start": "python3 -m http.server 8080"
+  },
+  "dependencies": {
+    "stripe": "^14.14.0"
+  }
+}
