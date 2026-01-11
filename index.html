@@ -42,6 +42,7 @@
                     },
                     backgroundImage: {
                         'hero-pattern': "linear-gradient(to bottom, rgba(13, 24, 26, 0.3), rgba(13, 24, 26, 0.5)), url('Assets/Images/_MG_8266.webp')",
+                        'radial-gradient': 'radial-gradient(circle, var(--tw-gradient-stops))',
                     },
                     letterSpacing: {
                         'widest': '.25em',
@@ -106,13 +107,46 @@
             outline: none;
             border-bottom-color: #1F3A3D;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
     </style>
 </head>
 
 <body class="bg-river-sand text-corsica-dark antialiased">
 
     <nav id="navbar"
-        class="fixed w-full z-50 transition-all duration-300 py-8 px-8 md:px-16 flex justify-between items-center text-white mix-blend-difference">
+        class="fixed w-full z-50 transition-all duration-500 py-6 px-8 md:px-16 flex justify-between items-center text-white mix-blend-difference backdrop-blur-[2px]">
         <a href="#" class="text-3xl font-serif italic tracking-wider z-50 relative group">
             Ernella
             <span
@@ -152,27 +186,28 @@
     <header
         class="relative h-screen min-h-[700px] w-full bg-hero-pattern bg-cover bg-center bg-no-repeat bg-fixed flex flex-col justify-center items-center text-center text-white px-4 overflow-hidden">
 
-        <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40"></div>
+        <!-- Cinematic Vignette -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30"></div>
+        <div class="absolute inset-0 bg-radial-gradient from-transparent to-black/40 opacity-80"></div>
 
-        <div class="relative z-10 max-w-5xl mx-auto space-y-8">
+        <div class="relative z-10 max-w-7xl mx-auto space-y-12">
             <div class="hero-text overflow-hidden">
                 <p
-                    class="text-xs md:text-sm font-sans tracking-mega uppercase opacity-0 animate-fade-in text-gold-accent mb-4">
+                    class="text-xs md:text-sm font-sans tracking-[0.5em] uppercase opacity-0 animate-fade-in text-white/90 mb-4 mix-blend-overlay font-semibold">
                     Giuncaggio, Corsica</p>
             </div>
 
             <h1
-                class="hero-text font-serif italic text-6xl md:text-8xl lg:text-9xl leading-none mix-blend-overlay opacity-90">
+                class="hero-text font-serif italic text-7xl md:text-9xl lg:text-[10rem] leading-[0.8] tracking-tighter mix-blend-overlay opacity-100">
                 <span class="block">Silence</span>
-                <span class="block not-italic font-light mt-[-0.2em]">is Sacred</span>
+                <span class="block px-4">is Sacred</span>
             </h1>
 
-            <div class="hero-text h-[1px] w-24 bg-white/50 mx-auto my-8"></div>
+            <div class="hero-text h-[1px] w-32 bg-white/30 mx-auto my-12"></div>
 
             <p
-                class="hero-text text-lg md:text-xl font-light max-w-xl mx-auto opacity-80 font-sans tracking-wide leading-relaxed">
-                A historic farm on the banks of the Tavignano.<br>
-                Just you, the river, and the wind.
+                class="hero-text text-lg md:text-2xl font-light max-w-lg mx-auto opacity-90 font-serif italic tracking-wide leading-relaxed text-white/80">
+                "Just you, the river, and the wind."
             </p>
         </div>
 
